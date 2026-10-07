@@ -7,10 +7,17 @@ ZONE_TOP = ROWS - 6
 TICK, PLAYER_SPEED, BULLET_SPEED = 0.09, 260, 620
 MUSHROOM_HP = 4
 
+# State for the most recently hit mushroom's flash effect.
+FLASH_HP = None
+FLASH_TIME = 0.0
+FLASH_DURATION = 0.1
+
 
 def mushroom_color(hp):
     """Return an (r, g, b) colour for a mushroom with the given hit points, or None for the default."""
-    pass
+    if FLASH_TIME > 0 and hp == FLASH_HP:
+        return (255, 255, 255)
+    return None
 
 
 def on_segment_hit(segment, score):
@@ -46,6 +53,10 @@ class Game:
         self.reset()
 
     def reset(self):
+        global FLASH_HP, FLASH_TIME
+        FLASH_HP = None
+        FLASH_TIME = 0.0
+
         self.score, self.lives, self.wave, self.state = 0, 3, 1, "play"
         self.mushrooms = {}
         for _ in range(45):
@@ -71,7 +82,14 @@ class Game:
             self.bullet = pygame.Vector2(self.x, self.y - 12)
 
     def hit_mushroom(self, cell):
+        global FLASH_HP, FLASH_TIME
+
         self.mushrooms[cell] -= 1
+
+        # Record the remaining HP for the mushroom that was just hit.
+        FLASH_HP = self.mushrooms[cell]
+        FLASH_TIME = FLASH_DURATION
+
         if self.mushrooms[cell] <= 0:
             del self.mushrooms[cell]
             self.score += 5
@@ -104,8 +122,17 @@ class Game:
                         return
 
     def update(self, dt, keys):
+        global FLASH_HP, FLASH_TIME
+
         if self.state != "play":
             return
+
+        # Decay the mushroom flash timer.
+        if FLASH_TIME > 0:
+            FLASH_TIME = max(0.0, FLASH_TIME - dt)
+            if FLASH_TIME == 0.0:
+                FLASH_HP = None
+
         self.invulnerable = max(0.0, self.invulnerable - dt)
         self.x += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * PLAYER_SPEED * dt
         self.y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * PLAYER_SPEED * dt
