@@ -29,10 +29,8 @@ def on_segment_hit(segment, score):
     center_y = segment.row * CELL + CELL // 2
 
     for _ in range(12):
-        angle = random.uniform(0, 2 * pygame.math.Vector2(1, 0).angle_to(pygame.math.Vector2(0, 1)))
         speed = random.uniform(50, 130)
 
-        # Use a random direction for the particle velocity.
         direction = pygame.Vector2(1, 0).rotate(random.uniform(0, 360))
         velocity = direction * speed
 
@@ -51,8 +49,8 @@ def on_segment_hit(segment, score):
 
 
 def wave_speed_bonus(wave):
-    """Return an extra tick-rate multiplier for centipede segments at the given wave, or None for the default speed."""
-    pass
+    """Return a speed multiplier for centipede segments at the given wave."""
+    return 1 + 0.15 * (wave - 1)
 
 
 class Segment:
@@ -177,30 +175,41 @@ class Game:
         self.y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * PLAYER_SPEED * dt
         self.x = max(10, min(WIDTH - 10, self.x))
         self.y = max(ZONE_TOP * CELL + 10, min(ROWS * CELL - 10, self.y))
+
         if keys[pygame.K_SPACE]:
             self.fire()
+
         self.update_bullet(dt)
         self.timer += dt
+
         effective_tick = TICK / (wave_speed_bonus(self.wave) or 1)
+
         while self.timer >= effective_tick:
             self.timer -= effective_tick
             for chain in self.chains:
                 for segment in chain:
                     segment.step(self.mushrooms)
+
         player_cell = (int(self.y // CELL), int(self.x // CELL))
+
         if self.invulnerable <= 0 and any(
-            (s.row, s.col) == player_cell for c in self.chains for s in c
+            (s.row, s.col) == player_cell
+            for c in self.chains
+            for s in c
         ):
             self.lives -= 1
             self.respawn()
+
             if self.lives <= 0:
                 self.state = "lose"
+
         if not self.chains:
             self.wave += 1
             self.spawn_wave()
 
     def draw(self, screen):
         screen.fill((8, 8, 16))
+
         for (row, col), hp in self.mushrooms.items():
             color = mushroom_color(hp) or (
                 200 - (MUSHROOM_HP - hp) * 40,
@@ -208,7 +217,14 @@ class Game:
                 170,
             )
             center = (col * CELL + CELL // 2, row * CELL + CELL // 2)
-            pygame.draw.circle(screen, color, center, CELL // 2 - 1)
+
+            pygame.draw.circle(
+                screen,
+                color,
+                center,
+                CELL // 2 - 1,
+            )
+
             pygame.draw.rect(
                 screen,
                 (230, 230, 200),
@@ -221,6 +237,7 @@ class Game:
                     segment.col * CELL + CELL // 2,
                     segment.row * CELL + CELL // 2,
                 )
+
                 pygame.draw.circle(
                     screen,
                     (240, 200, 60) if index == 0 else (80, 220, 90),
@@ -244,8 +261,14 @@ class Game:
             pygame.draw.rect(
                 screen,
                 (255, 255, 255),
-                (self.bullet.x - 1, self.bullet.y - 6, 3, 10),
+                (
+                    self.bullet.x - 1,
+                    self.bullet.y - 6,
+                    3,
+                    10,
+                ),
             )
+
         if self.invulnerable <= 0 or int(self.invulnerable * 10) % 2 == 0:
             pygame.draw.polygon(
                 screen,
@@ -256,12 +279,14 @@ class Game:
                     (self.x - 10, self.y + 10),
                 ],
             )
+
         hud = self.font.render(
             f"Score {self.score}  Lives {self.lives}  Wave {self.wave}  R = reset",
             True,
             (240, 240, 240),
         )
         screen.blit(hud, (10, ROWS * CELL + 6))
+
         if self.state == "lose":
             label = self.font.render(
                 "GAME OVER - Press R",
@@ -270,7 +295,9 @@ class Game:
             )
             screen.blit(
                 label,
-                label.get_rect(center=(WIDTH // 2, HEIGHT // 2)),
+                label.get_rect(
+                    center=(WIDTH // 2, HEIGHT // 2)
+                ),
             )
 
 
@@ -281,16 +308,20 @@ def main():
     clock = pygame.time.Clock()
     game = Game()
     running = True
+
     while running:
         dt = min(clock.tick(60) / 1000, 0.05)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                 game.reset()
+
         game.update(dt, pygame.key.get_pressed())
         game.draw(screen)
         pygame.display.flip()
+
     pygame.quit()
 
 
