@@ -12,6 +12,9 @@ FLASH_HP = None
 FLASH_TIME = 0.0
 FLASH_DURATION = 0.1
 
+# Particle state for destroyed centipede segments.
+PARTICLES = []
+
 
 def mushroom_color(hp):
     """Return an (r, g, b) colour for a mushroom with the given hit points, or None for the default."""
@@ -22,7 +25,29 @@ def mushroom_color(hp):
 
 def on_segment_hit(segment, score):
     """Called whenever a centipede segment is shot; add sparkles, sounds, or bonus points here."""
-    pass
+    center_x = segment.col * CELL + CELL // 2
+    center_y = segment.row * CELL + CELL // 2
+
+    for _ in range(12):
+        angle = random.uniform(0, 2 * pygame.math.Vector2(1, 0).angle_to(pygame.math.Vector2(0, 1)))
+        speed = random.uniform(50, 130)
+
+        # Use a random direction for the particle velocity.
+        direction = pygame.Vector2(1, 0).rotate(random.uniform(0, 360))
+        velocity = direction * speed
+
+        PARTICLES.append({
+            "pos": pygame.Vector2(center_x, center_y),
+            "vel": velocity,
+            "life": random.uniform(0.3, 0.5),
+            "max_life": 0.5,
+            "radius": random.randint(2, 4),
+            "color": random.choice([
+                (255, 220, 50),
+                (255, 170, 30),
+                (255, 120, 20),
+            ]),
+        })
 
 
 def wave_speed_bonus(wave):
@@ -53,9 +78,11 @@ class Game:
         self.reset()
 
     def reset(self):
-        global FLASH_HP, FLASH_TIME
+        global FLASH_HP, FLASH_TIME, PARTICLES
+
         FLASH_HP = None
         FLASH_TIME = 0.0
+        PARTICLES.clear()
 
         self.score, self.lives, self.wave, self.state = 0, 3, 1, "play"
         self.mushrooms = {}
@@ -133,6 +160,18 @@ class Game:
             if FLASH_TIME == 0.0:
                 FLASH_HP = None
 
+        # Update particle positions and lifetimes.
+        alive_particles = []
+        for particle in PARTICLES:
+            particle["pos"] += particle["vel"] * dt
+            particle["vel"] *= 0.92
+            particle["life"] -= dt
+
+            if particle["life"] > 0:
+                alive_particles.append(particle)
+
+        PARTICLES[:] = alive_particles
+
         self.invulnerable = max(0.0, self.invulnerable - dt)
         self.x += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * PLAYER_SPEED * dt
         self.y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * PLAYER_SPEED * dt
@@ -175,6 +214,7 @@ class Game:
                 (230, 230, 200),
                 (center[0] - 3, center[1], 6, CELL // 2 - 1),
             )
+
         for chain in self.chains:
             for index, segment in enumerate(chain):
                 center = (
@@ -187,6 +227,19 @@ class Game:
                     center,
                     CELL // 2,
                 )
+
+        # Draw explosion particles.
+        for particle in PARTICLES:
+            pygame.draw.circle(
+                screen,
+                particle["color"],
+                (
+                    int(particle["pos"].x),
+                    int(particle["pos"].y),
+                ),
+                particle["radius"],
+            )
+
         if self.bullet:
             pygame.draw.rect(
                 screen,
