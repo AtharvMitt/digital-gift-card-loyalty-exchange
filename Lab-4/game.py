@@ -49,7 +49,9 @@ class Game:
         self.score, self.lives, self.wave, self.state = 0, 3, 1, "play"
         self.mushrooms = {}
         for _ in range(45):
-            self.mushrooms[(random.randint(1, ZONE_TOP - 2), random.randint(0, COLS - 1))] = MUSHROOM_HP
+            self.mushrooms[
+                (random.randint(1, ZONE_TOP - 2), random.randint(0, COLS - 1))
+            ] = MUSHROOM_HP
         self.respawn()
         self.spawn_wave()
 
@@ -70,7 +72,7 @@ class Game:
 
     def hit_mushroom(self, cell):
         self.mushrooms[cell] -= 1
-        if self.mushrooms[cell] <= 1:
+        if self.mushrooms[cell] <= 0:
             del self.mushrooms[cell]
             self.score += 5
 
@@ -120,7 +122,9 @@ class Game:
                 for segment in chain:
                     segment.step(self.mushrooms)
         player_cell = (int(self.y // CELL), int(self.x // CELL))
-        if self.invulnerable <= 0 and any((s.row, s.col) == player_cell for c in self.chains for s in c):
+        if self.invulnerable <= 0 and any(
+            (s.row, s.col) == player_cell for c in self.chains for s in c
+        ):
             self.lives -= 1
             self.respawn()
             if self.lives <= 0:
@@ -132,23 +136,62 @@ class Game:
     def draw(self, screen):
         screen.fill((8, 8, 16))
         for (row, col), hp in self.mushrooms.items():
-            color = mushroom_color(hp) or (200 - (MUSHROOM_HP - hp) * 40, 80, 170)
+            color = mushroom_color(hp) or (
+                200 - (MUSHROOM_HP - hp) * 40,
+                80,
+                170,
+            )
             center = (col * CELL + CELL // 2, row * CELL + CELL // 2)
             pygame.draw.circle(screen, color, center, CELL // 2 - 1)
-            pygame.draw.rect(screen, (230, 230, 200), (center[0] - 3, center[1], 6, CELL // 2 - 1))
+            pygame.draw.rect(
+                screen,
+                (230, 230, 200),
+                (center[0] - 3, center[1], 6, CELL // 2 - 1),
+            )
         for chain in self.chains:
             for index, segment in enumerate(chain):
-                center = (segment.col * CELL + CELL // 2, segment.row * CELL + CELL // 2)
-                pygame.draw.circle(screen, (240, 200, 60) if index == 0 else (80, 220, 90), center, CELL // 2)
+                center = (
+                    segment.col * CELL + CELL // 2,
+                    segment.row * CELL + CELL // 2,
+                )
+                pygame.draw.circle(
+                    screen,
+                    (240, 200, 60) if index == 0 else (80, 220, 90),
+                    center,
+                    CELL // 2,
+                )
         if self.bullet:
-            pygame.draw.rect(screen, (255, 255, 255), (self.bullet.x - 1, self.bullet.y - 6, 3, 10))
+            pygame.draw.rect(
+                screen,
+                (255, 255, 255),
+                (self.bullet.x - 1, self.bullet.y - 6, 3, 10),
+            )
         if self.invulnerable <= 0 or int(self.invulnerable * 10) % 2 == 0:
-            pygame.draw.polygon(screen, (80, 200, 255), [(self.x, self.y - 10), (self.x + 10, self.y + 10), (self.x - 10, self.y + 10)])
-        hud = self.font.render(f"Score {self.score}  Lives {self.lives}  Wave {self.wave}  R = reset", True, (240, 240, 240))
+            pygame.draw.polygon(
+                screen,
+                (80, 200, 255),
+                [
+                    (self.x, self.y - 10),
+                    (self.x + 10, self.y + 10),
+                    (self.x - 10, self.y + 10),
+                ],
+            )
+        hud = self.font.render(
+            f"Score {self.score}  Lives {self.lives}  Wave {self.wave}  R = reset",
+            True,
+            (240, 240, 240),
+        )
         screen.blit(hud, (10, ROWS * CELL + 6))
         if self.state == "lose":
-            label = self.font.render("GAME OVER - Press R", True, (255, 255, 120))
-            screen.blit(label, label.get_rect(center=(WIDTH // 2, HEIGHT // 2)))
+            label = self.font.render(
+                "GAME OVER - Press R",
+                True,
+                (255, 255, 120),
+            )
+            screen.blit(
+                label,
+                label.get_rect(center=(WIDTH // 2, HEIGHT // 2)),
+            )
 
 
 def main():
