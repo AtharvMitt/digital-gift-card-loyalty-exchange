@@ -1,4 +1,0 @@
-movie_reviews.py:34:11: E225 missing whitespace around operator
-movie_reviews.py:47:1: E302 expected 2 blank lines, found 1
-movie_reviews.py:69:67: E261 at least two spaces before inline comment
-movie_reviews.py:71:20: E231 missing whitespace after ','
