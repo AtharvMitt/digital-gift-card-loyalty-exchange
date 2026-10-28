@@ -1,0 +1,29 @@
+************* Module movie_reviews
+movie_reviews.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+movie_reviews.py:8:0: C0103: Constant name "featured" doesn't conform to UPPER_CASE naming style (invalid-name)
+movie_reviews.py:11:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:11:0: C0103: Function name "addMovie" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:16:0: C0103: Function name "rateMovie" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:16:28: C0103: Argument name "reviewText" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:26:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:26:0: C0103: Function name "averageRating" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:28:4: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+movie_reviews.py:34:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:34:0: C0103: Function name "topMovies" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:39:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:39:0: C0103: Function name "pickFeatured" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:40:4: W0603: Using the global statement (global-statement)
+movie_reviews.py:45:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:45:0: C0103: Function name "reviewId" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:45:20: C0103: Argument name "reviewText" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:48:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:48:0: C0103: Function name "printAllReviews" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:50:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+movie_reviews.py:54:0: C0116: Missing function or method docstring (missing-function-docstring)
+movie_reviews.py:54:0: C0103: Function name "streamAddress" doesn't conform to snake_case naming style (invalid-name)
+movie_reviews.py:58:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+-----------------------------------
+Your code has been rated at 5.47/10
+
