@@ -24,6 +24,10 @@ Reports are preserved in `reports/before/`. The baseline Pylint score is
 
 - Baseline: ran the demo and all three tools, saved original reports, and
   documented all findings in severity order.
-- Bandit fixes: pending.
+- Bandit fixes: completed all four findings without suppressions. Bandit exits
+  successfully with no issues; reports and demo output are in
+  `reports/after-bandit/`. The SHA-256 display ID changes from `52e343ca87` to
+  `b8fc2faf6d`, and the printed host changes to `127.0.0.1`. Rating averages,
+  ordering, review storage, and genre output retain their original behavior.
 - Pylint fixes: pending.
 - Flake8 fixes and final verification: pending.
