@@ -35,7 +35,7 @@ def average_rating(title):
 
 def top_movies(count=2):
     """Return top titles by average, keeping insertion order for ties."""
-    ranked=sorted(movies, key=average_rating, reverse=True)
+    ranked = sorted(movies, key=average_rating, reverse=True)
     return ranked[:count]
 
 
@@ -47,6 +47,7 @@ def pick_featured():
 def review_id(title, review_text):
     """Return a ten-character SHA-256 review label for display."""
     return hashlib.sha256((title + review_text).encode()).hexdigest()[:10]
+
 
 def print_all_reviews():
     """Print each movie's position, title, and average in insertion order."""
@@ -72,9 +73,9 @@ def main():
     print_all_reviews()
     print("Top movies:", top_movies())
     print("Featured today:", pick_featured())
-    print("Review id:", review_id("Laugh Track", "Not very funny")) # demo id
+    print("Review id:", review_id("Laugh Track", "Not very funny"))  # demo id
     print("Streaming from", stream_address())
-    print("Genres:",sorted(movie["genre"] for movie in movies.values()))
+    print("Genres:", sorted(movie["genre"] for movie in movies.values()))
 
 
 main()

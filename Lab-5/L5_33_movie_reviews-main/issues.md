@@ -34,4 +34,7 @@ Reports are preserved in `reports/before/`. The baseline Pylint score is
   assignment, average calculation no longer has a redundant `else`, and review
   printing uses `enumerate`. Reran the demo and all three tools; current reports
   are in `reports/after/`.
-- Flake8 fixes and final verification: pending.
+- Flake8 fixes: corrected all four formatting findings. Reran the demo and all
+  three analysis tools: Pylint **10.00/10**, Bandit **no issues**, and Flake8
+  **no findings**, all exiting successfully. Final reports and demo output are
+  in `reports/after/`; original reports remain in `reports/before/`.

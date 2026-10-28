@@ -8,7 +8,7 @@ Follow the lab handout for the full instructions.
 
 A movie rating board. It adds movies, accepts 1-5 star ratings with optional reviews, works out average ratings, ranks the top movies, picks a featured movie and generates review ids.
 
-The code works, but only just. It has quality, style and security problems of the kind Pylint, Flake8 and Bandit are built to find.
+The supplied code had quality, style and security problems identified by Pylint, Flake8 and Bandit. The documented findings have been fixed in three separate tool-specific commits.
 
 ## What to do
 
@@ -23,16 +23,21 @@ The code works, but only just. It has quality, style and security problems of th
 2. **Install the tools:**
 
    ```
+   python -m venv .venv
+   source .venv/bin/activate
    python -m pip install pylint bandit flake8
    ```
 
 3. **Run the analysis and save the reports:**
 
    ```
-   python -m pylint movie_reviews.py > pylint_report.txt
-   python -m bandit -r movie_reviews.py > bandit_report.txt
-   python -m flake8 movie_reviews.py > flake8_report.txt
+   mkdir -p reports/after
+   python -m pylint --persistent=n movie_reviews.py > reports/after/pylint_report.txt 2>&1
+   python -m bandit -r movie_reviews.py > reports/after/bandit_report.txt 2>&1
+   python -m flake8 movie_reviews.py > reports/after/flake8_report.txt 2>&1
    ```
+
+   Original reports and demo output are preserved in `reports/before/`; final reports and demo output are in `reports/after/`. An empty Flake8 report means no findings.
 
 4. **Document the issues** in `issues.md` using this table (at least 4 rows, high and medium severity first):
 
@@ -42,14 +47,14 @@ The code works, but only just. It has quality, style and security problems of th
 
 5. **Fix the code.** Fix at least 4 of the issues you documented, then rerun all three tools to confirm they are gone. Repeat until you are satisfied. The program should still do its job when you are done.
 
-6. **Reflect.** Answer the four reflection questions from the handout in `reflection.md`.
-
 ## Deliverables
 
 - `movie_reviews.py`: your cleaned version, with at least 4 issues fixed.
 - `issues.md`: the completed issue table.
-- `reflection.md`: your answers to the reflection questions.
+- `reports/before/` and `reports/after/`: the three analysis reports and demo output before and after the fixes.
 
-**Target:** aim for a Pylint score above 9.5 on your final file. A perfect 10.00/10 is very good.
+**Final results:** Pylint **10.00/10**, Bandit **no findings**, and Flake8 **no findings**. Verified with Python 3.14.8, Pylint 4.1.3, Bandit 1.9.4, and Flake8 7.4.1.
+
+The demo preserves its ratings and rankings. The SHA-256 review ID is now `b8fc2faf6d`, the stream address is `127.0.0.1:8000`, and the featured movie varies between runs. `reflection.md` is omitted as requested.
 
 Be ready to explain the bugs you found and how you fixed them. You may be called on to present.
