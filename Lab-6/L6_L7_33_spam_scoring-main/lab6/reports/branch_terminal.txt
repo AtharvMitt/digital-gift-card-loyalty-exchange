@@ -1,0 +1,18 @@
+Lab 6 | AtharvMitt | PES1UG24CS091 | branch coverage
+$ date --iso-8601=seconds
+2026-11-03T11:55:04+05:30
+$ pwd
+/home/atharv/Documents/PES/SE/Lab-1/Lab-6/L6_L7_33_spam_scoring-main/lab6
+$ git var GIT_AUTHOR_IDENT
+AtharvMitt <atharvmitt@gmail.com> 1793687104 +0530
+$ python -m coverage run --branch --source=spam_scoring -m pytest -q BranchCoverageTest_PES1UG24CS091_spam_scoring.py
+..................................................                       [100%]
+50 passed in 0.05s
+$ python -m coverage report -m --fail-under=90
+Name              Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------
+spam_scoring.py      39      0     26      0   100%
+-------------------------------------------------------------
+TOTAL                39      0     26      0   100%
+$ python -m coverage json -o reports/branch_coverage.json
+Wrote JSON report to reports/branch_coverage.json
